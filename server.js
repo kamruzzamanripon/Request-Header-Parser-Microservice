@@ -6,16 +6,8 @@ require('dotenv').config();
 var express = require('express');
 var app = express();
 
-app.get("/api/whoami", function (req, res) {
-  const ip = req.ip;
-  // console.log(JSON.stringify(req.headers));
-  const language = req.headers['accept-language'];
-  const software = req.headers['user-agent'];
-  res.send({ip: ip, language: language, software: software});
-})
-
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC
+// so that your API is remotely testable by FCC 
 var cors = require('cors');
 app.use(cors({optionSuccessStatus: 200}));  // some legacy browsers choke on 204
 
@@ -27,9 +19,23 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-// your first API endpoint...
+
+// your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
+});
+
+// whoami API endpoint
+
+app.enable('trust proxy');
+
+app.get('/api/whoami', (req, res) => {
+  var headerParsed = {
+    'ipaddress': req.ip,
+    'language': req.headers['accept-language'],
+    'software': req.headers['user-agent']
+  };
+  res.send(headerParsed);
 });
 
 // listen for requests :)
